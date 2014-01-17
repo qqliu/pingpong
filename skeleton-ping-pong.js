@@ -30,11 +30,17 @@ var canvas = document.getElementById("canvas"),
 		height = window.innerHeight, // Window's height
 		particles = [], // Array containing particles
 		ball = {}, // Ball object
-		topPaddle = {}, //object to track top paddle position
-		bottomPaddle = {},  //object to track bottom paddle position
+
+		/* TODO 1: Initialize variables topPaddle, bottomPaddle,
+		 		   paddleSpeed, points, playerMode, and over
+		topPaddle: object to track top paddle position, initialize to object with no attributes
+		bottomPaddle: object to track bottom paddle position, initialize to object with no attributes
+		paddleSpeed: initialize to initial paddle speed 25
+		points = 0: Variable to store points, initialize to 0 
+		over: flag varialbe, changed when the game is over, initialize to 0 (game not over)
+		playerMode: indicator variable for single player or two players, initialize to 0 (two players) */
+
 		paddles = [2], // Array containing two paddles
-		paddleSpeed = 25, //Initializes initial paddle speed
-		points = 0, // Variable to store points
 		fps = 60, // Max FPS (frames per second)
 		particlesCount = 20, // Number of sparks when ball strikes the paddle
 		flag = 0, // Flag variable which is changed on collision
@@ -42,14 +48,12 @@ var canvas = document.getElementById("canvas"),
 		multipler = 1, // Varialbe to control the direction of sparks
 		startBtn = {}, // Start button object
 		restartBtn = {}, // Restart button object
-		over = 0, // flag varialbe, changed when the game is over
-		playerMode = 0, //indicator variable for single player or two players
 		init, // variable to initialize animation
 		paddleHit;
 
 canvas.addEventListener("mousedown", btnClick, true);
-//Keydown event listener used to detect keyboard events
-document.addEventListener("keydown", trackKeyboard);
+
+// TODO 2: Add a document keyboard event listener that uses the method: trackKeyboard
 
 // Initialize the collision sound
 collision = document.getElementById("collide");
@@ -60,8 +64,9 @@ canvas.height = height;
 
 // Function to paint canvas
 function paintCanvas() {
-	ctx.fillStyle = "black";
-	ctx.fillRect(0, 0, width, height);
+	/* TODO 3: Paint the canvas "black" and 
+		and fill the canvas rectangle to canvas.width 
+		and canvas.height */
 }
 
 // Function for creating paddles
@@ -183,16 +188,9 @@ function trackKeyboard(e) {
     var key = e.which;
 
     if(key == "74") bottomPaddle.x = "left"; //bottom paddle go left
-    else if(key == "76") bottomPaddle.x = "right"; //bottom paddle go right
-    else if(key == "65") topPaddle.x = "left"; //top paddle go left
-    else if(key == "68") topPaddle.x = "right"; //top paddle go right
+    /* TODO 5: Implement the rest of the track keyboard method 
+        key mappings: "76": l, "65": a, "68": d */
 }
-
-/*var previousTopPaddle;
-var previousBottomPaddle;
-
-var	bCount = 0;
-var	tCount = 0;*/
 
 // Function to update positions, score and everything.
 // Basically, the main game logic is defined here
@@ -210,14 +208,14 @@ function update() {
 
 	if (over < 1) {
 		// Move the paddles on key press
-		if (bottomPaddle.x == "left" /*&& bCount < 20*/) {
+		if (bottomPaddle.x == "left" ) {
 			var newBPos =  p1.x - p.w/paddleSpeed;
 			if (newBPos > 0) {
 				p1.x = newBPos;
 			} else {
 				p1.x = 0;
 			}
-		} else if (bottomPaddle.x == "right" /*&& bCount < 20*/) {
+		} else if (bottomPaddle.x == "right" ) {
 			var newBPos = p1.x + p.w/paddleSpeed;
 			if (newBPos < canvas.width-150) {
 				p1.x = newBPos;
@@ -226,48 +224,21 @@ function update() {
 			}
 		}
 
-		/*if (topPaddle.x == previousTopPaddle) {
-			tCount++;
-		} else {
-			previousTopPaddle = topPaddle.x;
-			tCount = 0;
-		}*/
-
-		if (topPaddle.x == "left" /*&& tCount < 20*/) {
-			var newTPos = p2.x - p.w/paddleSpeed;
-			if (newTPos < 0) {
-				p2.x = 0;
-			} else {
-				p2.x = newTPos;
-			}
-		} else if (topPaddle.x == "right" /*&& tCount < 20*/) {
-			var newTPos = p2.x + p.w/paddleSpeed;
-			if (newTPos > width-150) {
-				p2.x = canvas.width-150;
-			} else {
-				p2.x = newTPos;
-			}
-		}
+		/* TODO 6: Implement the update paddle if/else if statements for topPaddle
+					This is very similar to the if/else if statements for bottomPaddle */
 
 		if (playerMode > 0) {
-			if (ball.vy < 0) {
-				var predictedX = ball.x + ball.vx*(ball.y/Math.abs(ball.vy));
-			} else {
-				var predictedX = ball.x + ball.vx*((height - ball.y)/ball.vy);
-			}
+			/* TODO 7 (CHALLENGE) Implement the methods for finding predictedX that
+				will allow the computer to predict the position that the ball will hit
+				the wall. */
+			var predictedX;
+
 			if (p2.x + p2.w/2 > predictedX) {
 				topPaddle.x = "left";
 			} else if (p2.x - p2.w < predictedX) {
 				topPaddle.x = "right";
 			}
 		}
-	 
-		/*if (bottomPaddle.x == previousBottomPaddle) {
-			bCount++;
-		} else {
-			previousBottomPaddle = bottomPaddle.x;
-			bCount = 0;
-		}*/
 	}
 	
 	// If the ball strikes with paddles,
@@ -451,13 +422,13 @@ function startScreen() {
 	twoPlayerBtn.draw();
 }
 
-// On button click (Restart and start)
+// On button click
 function btnClick(e) {
 	
 	// Variables for storing mouse position on click
 	var mx = e.pageX, my = e.pageY;
 
-	// If the game is over, and the restart button is clicked
+	// If the game is over
 	if(over == 1) {
 		ball.x = 0;
 		ball.y = 20;
@@ -471,17 +442,14 @@ function btnClick(e) {
 		over = 0;
 	}
 	
-	// Click start button
+	// Click single player button
 	if(mx >= singlePlayerBtn.x && mx <= singlePlayerBtn.x + singlePlayerBtn.w) {
 		playerMode = 0;
 		animloop();
-		
-		// Delete the start button after clicking it
+	// Click the two players button
 	} else if(mx >= twoPlayerBtn.x && mx <= twoPlayerBtn.x + twoPlayerBtn.w) {
 		playerMode = 1;
 		animloop();
-		
-		// Delete the start button after clicking it
 	}
 }
 
